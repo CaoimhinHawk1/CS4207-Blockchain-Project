@@ -6,7 +6,7 @@
     "web3": "^4.16.0"
   },
   "devDependencies": {
-    "chai": "^5.1.2"
+    "chai": "^5.1.2",
     "18": "^0.0.0",
     "@openzeppelin/contracts": "^5.1.0"
   }
