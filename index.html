@@ -1,131 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peer Mentorship Network Interaction</title>
-    <!-- Include Web3.js library to enable interaction with Ethereum blockchain -->
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
+    <title>Peer Network</title>
+    <link rel="stylesheet" href="src/peernetwork.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src = "src/eventlistener.js"></script>
+    <script type="module" src="src/logic.js"></script>
 </head>
 <body>
-    <h1>Peer Mentorship Network Interaction</h1>
+<header>
+    <h1>Peer Mentorship Network</h1>
+</header>
 
-    <!-- Section for creating a new entry -->
-    <h2>Create Entry</h2>
-    <input type="text" id="createTopic" placeholder="Topic (e.g., Mentorship)">
-    <input type="number" id="createEntryId" placeholder="Entry ID">
-    <input type="text" id="createContent" placeholder="Initial Contribution">
-    <button id="createEntry">Create Entry</button>
-    <p id="createStatus">Status: Waiting...</p>
+<main>
 
-    <!-- Section for appending a contribution to an existing entry -->
-    <h2>Append Contribution</h2>
-    <input type="text" id="appendTopic" placeholder="Topic (e.g., Mentorship)">
-    <input type="number" id="appendEntryId" placeholder="Entry ID">
-    <input type="text" id="appendContent" placeholder="Contribution Content">
-    <button id="appendContribution">Append Contribution</button>
-    <p id="appendStatus">Status: Waiting...</p>
 
-    <!-- Section for fetching contributions for a specific entry -->
-    <h2>Fetch Contributions</h2>
-    <input type="text" id="fetchTopic" placeholder="Topic (e.g., Mentorship)">
-    <input type="number" id="fetchEntryId" placeholder="Entry ID">
-    <button id="fetchContributions">Fetch Contributions</button>
-    <div id="contributions">
-        <h3>Contributions</h3>
-        <p id="fetchStatus">Status: Waiting...</p>
-        <ul id="contributionList"></ul>
+    <div class = "role-selector">
+        <label for="role"><b>Are you a Mentor or a Student?</b></label>
+        <select name="Student Type" id="role">
+            <option value="student">Student</option>
+            <option value="mentor">Mentor</option>
+        </select>
     </div>
 
-    <script>
-        // Check if MetaMask or another Ethereum provider is installed in the user's browser
-        if (window.ethereum) {
-            // Initialize Web3 instance
-            const web3 = new Web3(window.ethereum);
+    <section id="login"></section>
+    <section id="dashboard"></section>
+</main>
 
-            // Request access to Ethereum accounts from the user
-            window.ethereum.request({ method: 'eth_requestAccounts' });
+<footer>
+    <p>&copy; 2024 Peer Mentorship Network</p>
+</footer>
 
-            // Define the smart contract address and ABI (Application Binary Interface)
-            const contractAddress = '0xYourContractAddress'; // Replace with the deployed contract address
-            const contractABI = [ /* ABI from Truffle or Solidity compilation */ ];
+<script>
+        document.getElementById("role").addEventListener("change", function () {
+            const roleDropdown = document.getElementById("role");
+            const selectedRole = roleDropdown.value;
 
-            // Create a contract instance to interact with the deployed smart contract
-            const mentorshipContract = new web3.eth.Contract(contractABI, contractAddress);
-            // Function to create a new entry in the smart contract
-            async function createEntry() {
-                const accounts = await web3.eth.getAccounts(); // Get the user's Ethereum account
-                const topic = document.getElementById('createTopic').value; // Get the topic from input
-                const entryId = parseInt(document.getElementById('createEntryId').value); // Entry ID
-                const content = document.getElementById('createContent').value; // Initial contribution
-
-                // Get the current nonce for the account to prevent replay attacks
-                const nonce = await web3.eth.getTransactionCount(accounts[0]);
-
-                try {
-                    // Call the createEntry function in the smart contract
-                    await mentorshipContract.methods.createEntry(topic, entryId, content, nonce)
-                        .send({ from: accounts[0] });
-                    document.getElementById('createStatus').innerText = "Entry created successfully!";
-                } catch (error) {
-                    document.getElementById('createStatus').innerText = "Error creating entry: " + error.message;
-                }
+            if (selectedRole) {
+                loadLogin();
+            } else {
+                document.getElementById("login").innerHTML = `<p>Please select a role to proceed</p>`;
             }
-
-            // Function to append a contribution to an existing entry
-            async function appendContribution() {
-                const accounts = await web3.eth.getAccounts(); // Get the user's Ethereum account
-                const topic = document.getElementById('appendTopic').value; // Get the topic
-                const entryId = parseInt(document.getElementById('appendEntryId').value); // Entry ID
-                const content = document.getElementById('appendContent').value; // Contribution content
-
-                // Get the current nonce for the account
-                const nonce = await web3.eth.getTransactionCount(accounts[0]);
-
-                try {
-                    // Call the appendContribution function in the smart contract
-                    await mentorshipContract.methods.appendContribution(topic, entryId, content, nonce)
-                        .send({ from: accounts[0] });
-                    document.getElementById('appendStatus').innerText = "Contribution appended successfully!";
-                } catch (error) {
-                    document.getElementById('appendStatus').innerText = "Error appending contribution: " + error.message;
-                }
-            }
-
-            // Function to fetch contributions for a specific entry
-            async function fetchContributions() {
-                const topic = document.getElementById('fetchTopic').value; // Get the topic
-                const entryId = parseInt(document.getElementById('fetchEntryId').value); // Entry ID
-
-                try {
-                    // Call the fetchContributions function in the smart contract
-                    const contributions = await mentorshipContract.methods.fetchContributions(topic, entryId).call();
-                    const [contents, contributors, timestamps] = contributions; // Extract data
-
-                    const contributionList = document.getElementById('contributionList');
-                    contributionList.innerHTML = ""; // Clear existing contributions
-
-                    // Loop through contributions and display them
-                    for (let i = 0; i < contents.length; i++) {
-                        const item = document.createElement('li');
-                        item.textContent = `Content: ${contents[i]}, Contributor: ${contributors[i]}, Timestamp: ${new Date(timestamps[i] * 1000).toLocaleString()}`;
-                        contributionList.appendChild(item);
-                    }
-                    document.getElementById('fetchStatus').innerText = "Contributions fetched successfully!";
-                } catch (error) {
-                    document.getElementById('fetchStatus').innerText = "Error fetching contributions: " + error.message;
-                }
-            }
-
-            // Add event listeners to the buttons
-            document.getElementById('createEntry').addEventListener('click', createEntry);
-            document.getElementById('appendContribution').addEventListener('click', appendContribution);
-            document.getElementById('fetchContributions').addEventListener('click', fetchContributions);
-
-        } else {
-            // Alert the user if no Ethereum provider (e.g., MetaMask) is detected
-            alert('Please install MetaMask to interact with this application.');
-        }
-    </script>
+        });
+</script>
 </body>
 </html>
