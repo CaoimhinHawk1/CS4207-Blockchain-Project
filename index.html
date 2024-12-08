@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peer Network</title>
     <link rel="stylesheet" href="src/peernetwork.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script src = "src/eventlistener.js"></script>
-    <script src = "src/logic.js"></script>
+    <script type="module" src="src/logic.js"></script>
 </head>
 <body>
 <header>
@@ -14,31 +15,17 @@
 </header>
 
 <main>
-    <form id="role-selector">
-        <div class="container">
-            <label for="studentName"><b>Student name</b></label>
-            <input type="text" placeholder="Enter Student name" id="studentName" required>
-        </div>
-        <div class="container">
-            <label for="studentCourse"><b>Student Course</b></label>
-            <input  type="text" placeholder="Enter Course" id="studentCourse" required>
-        </div>
-        <div class="container">
-            <label for="studentCompany"><b>Company:</b></label>
-            <input type="text" placeholder="Enter your company (optional)" id="studentCompany">
-        </div>
-        <div class = "role-selector">
-            <label for="role"><b>Are you a Mentor or a Student?</b></label>
-            <select name="Student Type" id="role">
-                <option value="student">Student</option>
-                <option value="mentor">Mentor</option>
-            </select>
-        </div>
-        <input type="hidden" id="studentType" value="Student">
 
-        <button type="button" id="submitButton" onclick="loadDashboard(event)">Submit</button>
-    </form>
 
+    <div class = "role-selector">
+        <label for="role"><b>Are you a Mentor or a Student?</b></label>
+        <select name="Student Type" id="role">
+            <option value="student">Student</option>
+            <option value="mentor">Mentor</option>
+        </select>
+    </div>
+
+    <section id="login"></section>
     <section id="dashboard"></section>
 </main>
 
@@ -46,5 +33,17 @@
     <p>&copy; 2024 Peer Mentorship Network</p>
 </footer>
 
+<script>
+        document.getElementById("role").addEventListener("change", function () {
+            const roleDropdown = document.getElementById("role");
+            const selectedRole = roleDropdown.value;
+
+            if (selectedRole) {
+                loadLogin();
+            } else {
+                document.getElementById("login").innerHTML = `<p>Please select a role to proceed</p>`;
+            }
+        });
+</script>
 </body>
 </html>

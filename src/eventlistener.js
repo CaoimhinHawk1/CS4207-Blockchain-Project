@@ -4,3 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadDashboard();
     });
 });
+
+document.addEventListener('DOMContentLoaded', ()=> {
+    document.getElementById('role').addEventListener('click', (event))
+    })

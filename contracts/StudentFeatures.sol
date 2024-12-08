@@ -35,8 +35,6 @@ contract StudentFeatures is AccessControl {
     constructor() {
 
         _grantRole(ADMIN_ROLE, msg.sender);
-
-
         _setRoleAdmin(STUDENT_ROLE, ADMIN_ROLE);
         _setRoleAdmin(MENTOR_ROLE, ADMIN_ROLE);
     }
