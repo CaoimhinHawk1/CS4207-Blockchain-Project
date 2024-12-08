@@ -2,7 +2,7 @@
 window.loadLogin = loadLogin;
 window.loadDashboard = loadDashboard;
 window.uploadResource = uploadResource;
-
+window.viewResources = viewResources;
 
 const studentFeaturesAddress = "0xF4D171Aaf9ED3F87ea953777ad386ac039D0D9A7";
 const peerNetworkAddress = "0x5a347c860F92E1e3f2D3E6564458cB2125648BdD";
