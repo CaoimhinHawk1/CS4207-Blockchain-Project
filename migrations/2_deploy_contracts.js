@@ -3,6 +3,6 @@ const StudentFeatures = artifacts.require('StudentFeatures');
 
 module.exports = function (deployer) {
     deployer.deploy(PeerMentorshipNetwork);
-    
+
     deployer.deploy(StudentFeatures);
 }
