@@ -17,7 +17,7 @@ contract PeerMentorshipNetwork {
     bytes32[] public hashedTopics;
 
     // A threshold value for the computational mining challenge
-    uint256 private challengeThreshold = 2000;
+    uint256 private challengeThreshold = 2**240;
 
     // Events to notify when entries or contributions are created
     event EntryCreated(string topic, uint256 entryId, string content, address contributor);
